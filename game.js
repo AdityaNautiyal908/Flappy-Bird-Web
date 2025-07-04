@@ -36,6 +36,9 @@ const INITIAL_GRAVITY = 0.08; // much slower at start
 const playBtn = { x: 120, y: 250, w: 160, h: 60 };
 const quitBtn = { x: 120, y: 340, w: 160, h: 60 };
 
+// Track which menu button is hovered
+let hoveredBtn = null; // 'play', 'shop', 'quit'
+
 // Bird skins (each is a set of frames for animation)
 const birdSkins = [
     { name: 'Yellow', frames: ['frames/frame-1.png','frames/frame-2.png','frames/frame-3.png','frames/frame-4.png','frames/frame-5.png','frames/frame-6.png','frames/frame-7.png','frames/frame-8.png'], cost: 0 },
@@ -225,19 +228,19 @@ function drawMenu() {
     ctx.textAlign = 'center';
     ctx.fillText('Flappy Bird', canvas.width / 2, 100);
     // Play button
-    ctx.fillStyle = '#28a745';
+    ctx.fillStyle = hoveredBtn === 'play' ? '#5cd97a' : '#28a745';
     ctx.fillRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
     ctx.fillStyle = '#fff';
     ctx.font = '32px Arial';
     ctx.fillText('Play', playBtn.x + playBtn.w / 2, playBtn.y + 40);
     // Shop button
-    ctx.fillStyle = '#007bff';
+    ctx.fillStyle = hoveredBtn === 'shop' ? '#4da3ff' : '#007bff';
     ctx.fillRect(playBtn.x, playBtn.y + 100, playBtn.w, playBtn.h);
     ctx.fillStyle = '#fff';
     ctx.font = '32px Arial';
     ctx.fillText('Shop', playBtn.x + playBtn.w / 2, playBtn.y + 140);
     // Quit button
-    ctx.fillStyle = '#dc3545';
+    ctx.fillStyle = hoveredBtn === 'quit' ? '#ff6b7a' : '#dc3545';
     ctx.fillRect(quitBtn.x, quitBtn.y + 100, quitBtn.w, quitBtn.h);
     ctx.fillStyle = '#fff';
     ctx.font = '32px Arial';
@@ -490,6 +493,35 @@ document.addEventListener('keyup', function(e) {
     if (e.code === 'Space') {
         spaceHeld = false;
         autoFlapTick = 0;
+    }
+});
+
+canvas.addEventListener('mousemove', function(e) {
+    if (gameState === STATE_MENU && !showShop) {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        if (
+            mx >= playBtn.x && mx <= playBtn.x + playBtn.w &&
+            my >= playBtn.y && my <= playBtn.y + playBtn.h
+        ) {
+            hoveredBtn = 'play';
+        } else if (
+            mx >= playBtn.x && mx <= playBtn.x + playBtn.w &&
+            my >= playBtn.y + 100 && my <= playBtn.y + 100 + playBtn.h
+        ) {
+            hoveredBtn = 'shop';
+        } else if (
+            mx >= quitBtn.x && mx <= quitBtn.x + quitBtn.w &&
+            my >= quitBtn.y + 100 && my <= quitBtn.y + 100 + quitBtn.h
+        ) {
+            hoveredBtn = 'quit';
+        } else {
+            hoveredBtn = null;
+        }
+        drawMenu();
+    } else {
+        hoveredBtn = null;
     }
 });
 
