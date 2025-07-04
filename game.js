@@ -5,7 +5,7 @@ const ctx = canvas.getContext('2d');
 
 // Game constants
 const GRAVITY = 0.18; // Reduced gravity for slower fall
-const FLAP = -6.5;    // Stronger flap for more satisfying jump
+const FLAP = -5.0;    // Stronger flap for more satisfying jump
 const PIPE_WIDTH = 60;
 const PIPE_GAP = 180; // Wider gap for easier play
 const BIRD_SIZE = 32;
